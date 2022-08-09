@@ -29,6 +29,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
+			<!-- Spring boot 为 2.7.1 时不用引用 junit-vintage-engine -->
 			<exclusions>
 				<exclusion>
 					<groupId>org.junit.vintage</groupId>
