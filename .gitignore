@@ -36,3 +36,5 @@ bin/
 *.log
 .DS_Store
 */.DS_Store
+consuming-web-service/.DS_Store
+serving-web-content/.DS_Store
