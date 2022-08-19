@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-
+import lombok.extern.slf4j.Slf4j;
 /**
  * The class is annotated with @EnableWebSecurity to enable Spring Security’s
  * web security support and provide the Spring MVC integration. It also extends
@@ -21,11 +21,12 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
  * 添加@EnableWebSecurity注释，以启用Spring Security的Web安全支持并提供Spring
  * MVC集成。它还扩展了WebSecurityConfigurerAdapter并覆盖了其一些方法来设置Web安全配置的某些细节。
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	/**
+	/**Slf4j
 	 * The configure(HttpSecurity) method defines which URL paths should be secured
 	 * and which should not. Specifically, the / and /home paths are configured to
 	 * not require any authentication. All other paths must be authenticated.
@@ -58,11 +59,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public UserDetailsService userDetailsService() {
 		PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 		// remember the password that is printed out and use in the next step
-		System.out.println(encoder.encode("password"));
+		log.trace(encoder.encode("password"));
 		UserDetails user = User.withUsername("user")
 				.password("{bcrypt}$2a$10$CWdgM73OCr/UFbw0LHucnOjeqTjlRurSlVUnjw/uE9mKOR8hhFxIu").roles("USER").build();
 		return new InMemoryUserDetailsManager(user);
 	}
 }
-
-
