@@ -4,19 +4,35 @@
 
 本指南将引导您完成在 Spring 托管 bean 上启用缓存的过程。
 
-你将建造什么
+在Spring Boot中通过@EnableCaching注解自动化配置合适的缓存管理器（CacheManager），Spring Boot根据下面的顺序去侦测缓存提供者：
+
+- Generic
+- JCache (JSR-107) (EhCache 3, Hazelcast, Infinispan, and others)
+- EhCache 2.x
+- Hazelcast
+- Infinispan
+- Couchbase
+- Redis
+- Caffeine
+- Simple
+
+除了按顺序侦测外，我们也可以通过配置属性spring.cache.type来强制指定。
+我们也可以通过debug调试查看cacheManager对象的实例来判断当前使用了什么缓存。
+
+## 搭建
+
 您将构建一个应用程序，在一个简单的图书存储库上启用缓存。
 
-你需要什么
+你需要什么：
 
 - JDK 1.8 或更高版本
 - Gradle 4+ 或 Maven 3.2+
 
-## 创建图书模型
+### 创建图书模型
 
 首先，您需要为您的书创建一个简单的模型。 来自 src/main/java/com/example/caching/Book.java。
 
-## 创建图书存储库
+### 创建图书存储库
 
 您还需要该模型的存储库。 来自 src/main/java/com/example/caching/BookRepository.java。
 
@@ -55,7 +71,7 @@ public class SimpleBookRepository implements BookRepository {
 
 simulateSlowService 故意在每个 getByIsbn 调用中插入三秒延迟。稍后，您将使用缓存加速此示例。
 
-## 使用存储库
+### 使用存储库
 
 接下来，您需要连接存储库并使用它来访问一些书籍。以下清单显示了如何执行此操作：
 
@@ -92,7 +108,7 @@ main() 方法使用 Spring Boot 的 SpringApplication.run() 方法来启动应�
 
 如果此时您尝试运行该应用程序，您应该注意到它非常慢，即使您多次检索完全相同的书。
 
-## 启用缓存
+### 启用缓存
 
 现在您可以在 SimpleBookRepository 上启用缓存，以便将书籍缓存在书籍缓存中。来自 src/main/java/com/example/caching/SimpleBookRepository.java。
 

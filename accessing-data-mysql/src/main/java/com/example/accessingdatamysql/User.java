@@ -5,37 +5,28 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 @Entity // This tells Hibernate to make a table out of this class
+@Data // Generate setters&getters
+@NoArgsConstructor // Generates a no-args constructor
 public class User {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
 	private String name;
 
+	private Integer age;
+
 	private String email;
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
+	public User(String name, Integer age, String email) {
 		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
+		this.age = age;
 		this.email = email;
 	}
+
 }
