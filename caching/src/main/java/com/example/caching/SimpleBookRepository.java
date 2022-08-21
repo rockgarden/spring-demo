@@ -18,6 +18,7 @@ public class SimpleBookRepository implements BookRepository {
 			long time = 3000L;
 			Thread.sleep(time);
 		} catch (InterruptedException e) {
+			Thread.currentThread().interrupt();
 			throw new IllegalStateException(e);
 		}
 	}
