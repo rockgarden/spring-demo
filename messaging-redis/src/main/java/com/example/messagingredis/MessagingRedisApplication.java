@@ -46,14 +46,15 @@ public class MessagingRedisApplication {
 	public static void main(String[] args) throws InterruptedException {
 		// creating a Spring application context
 		ApplicationContext ctx = SpringApplication.run(MessagingRedisApplication.class, args);
-		// starts the message listener container, and the message listener container bean starts listening for messages.
+		// starts the message listener container, and the message listener container
+		// bean starts listening for messages.
 		// retrieves the StringRedisTemplate bean from the application context.
 		StringRedisTemplate template = ctx.getBean(StringRedisTemplate.class);
 		Receiver receiver = ctx.getBean(Receiver.class);
 
 		while (receiver.getCount() == 0) {
 			LOGGER.info("Sending message...");
-			// send a Hello message on the chat topic by Redis 
+			// send a Hello message on the chat topic by Redis
 			template.convertAndSend("chat", "Hello from Redis!");
 			Thread.sleep(500L);
 		}
