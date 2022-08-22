@@ -6,11 +6,16 @@
 
 在 Spring 托管 bean 上启用缓存。
 
+### caching-by-ehcache
+
+使用 ehcache 缓存数据。
+
 ### securing-web
 
 使用受 Spring Security 保护的资源创建简单 Web 应用程序。
 
 ## 用户指南
+
 ### [将 Spring Boot 应用部署到 Azure](https://spring.io/guides/gs/spring-boot-for-azure/)
 
 建议您查看 [官方 Azure 文档](https://docs.microsoft.com/java/azure/spring-framework/deploy-spring-boot-java-app-with-maven-plugin) 以获取最新说明相同的任务。
