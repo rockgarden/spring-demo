@@ -2,15 +2,7 @@
 
 ## 搭建
 
-数据库准备
-
-`% mysql -u root -p`
-
-```sql
-mysql> CREATE USER 'test'@'localhost' IDENTIFIED WITH caching_sha2_password BY '12345678';
-mysql> CREATE DATABASE test DEFAULT CHARACTER SET = 'utf8mb4';
-mysql> grant all privileges on test.* to 'test'@'localhost';
-```
+[数据库准备](../README.md#创建数据库)
 
 创建User模型
 

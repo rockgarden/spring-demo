@@ -17,26 +17,7 @@ Spring Data JPA的出现可以通过编写一个继承自JpaRepository的接口�
 - MySQL 5.6 或更高版本。 如果您安装了 Docker，则将数据库作为容器运行可能会很有用。
 - JDK 1.8 或更高版本
 - Gradle 4+ 或 Maven 3.2+
-
-## 创建数据库
-
-打开终端并以可以创建新用户的用户身份打开 MySQL 客户端。
-
-例如，在 Linux 系统上，使用以下命令；
-
-`$ sudo mysql --password`
-
-这以 root 身份连接到 MySQL，并允许从所有主机访问用户。 这不是生产服务器的推荐方式。
-要创建新数据库，请在 mysql 提示符下运行以下命令：
-
-```sql
-mysql> CREATE DATABASE db_example DEFAULT CHARACTER SET = 'utf8mb4';
-mysql> CREATE USER 'springuser'@'%' IDENTIFIED WITH caching_sha2_password BY 'ThePassword';
-
-mysql> create database db_example; -- Creates the new database
-mysql> create user 'springuser'@'%' identified by 'ThePassword'; -- Creates the user
-mysql> grant all on db_example.* to 'springuser'@'%'; -- Gives all privileges to the new user on the newly created database
-```
+- [数据库准备](../README.md#创建数据库)
 
 ## 搭建
 
