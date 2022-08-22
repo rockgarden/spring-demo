@@ -1,7 +1,5 @@
 package com.example.messagingredis;
 
-// import java.util.concurrent.CountDownLatch;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -18,6 +16,8 @@ import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 public class MessagingRedisApplication {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(MessagingRedisApplication.class);
+
+	public static final String CHANNEL = "test";
 
 	@Bean
 	RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
@@ -59,6 +59,7 @@ public class MessagingRedisApplication {
 			Thread.sleep(500L);
 		}
 
-		System.exit(0);
+		// 若不需要监听 RedisController 可调用 RSystem.exit(0) 退出应用
 	}
+
 }
