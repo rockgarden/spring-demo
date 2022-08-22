@@ -1,5 +1,7 @@
 # 使用 EhCache 缓存数据
 
+引自 <http://blog.didispace.com/spring-boot-learning-21-5-2/>
+
 ## 搭建
 
 [数据库准备](../README.md#创建数据库)
@@ -9,6 +11,7 @@
 创建User存储库
 
 - 引入缓存注解 `@CacheConfig(cacheNames = "users")`
+- 所有变更操作，如 save 增加@CachePut注解，让更新操作完成之后将结果再put到缓存中
 
 创建测试类
 
@@ -35,3 +38,8 @@ Hibernate: select user0_.id as id1_0_, user0_.age as age2_0_, user0_.name as nam
 第一次查询：10
 第二次查询：10
 ```
+
+## TODO
+
+UserRepository 中重写的 User save(User user) 中 User 泛型转换不安全。
+Warn: `Type safety: The return type User for save(User) from the type UserRepository needs unchecked conversion to conform to S from the type CrudRepository<T,ID>`
