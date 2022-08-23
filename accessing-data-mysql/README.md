@@ -205,3 +205,19 @@ try {
    return "Error";
   }
 ```
+
+## 问题
+
+**ERROR**: `org.hibernate.AnnotationException: No identifier specified for entity`
+原因：根据Hinbernate的规范，一定要为实体类添加唯一的标识符，即主键id。
+解决：
+
+```java
+@Entity
+public class User {
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
+  ...
+}
+```

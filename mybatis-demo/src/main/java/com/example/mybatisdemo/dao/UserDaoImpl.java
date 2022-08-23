@@ -20,7 +20,6 @@ public class UserDaoImpl extends SqlSessionDaoSupport implements UserDao {
     public User findUserById(int id) throws Exception {
         // 继承 SqlSessionDaoSupport 类，通过 this.getSqlSession() 得到 sqlSession
         SqlSession sqlSession = this.getSqlSession();
-        User user = sqlSession.selectOne("mybatisdemo.findUserById", id);
-        return user;
+        return sqlSession.selectOne("mybatisdemo.findUserById", id);
     }
 }

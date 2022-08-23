@@ -1,8 +1,10 @@
 package com.example.mybatisdemo;
 
 import com.example.mybatisdemo.dao.UserDao;
-import com.example.mybatisdemo.mapper.UserQueryMapper;
+import com.example.mybatisdemo.mapper.UserMapper;
 import com.example.mybatisdemo.pojo.User;
+
+import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,11 +37,12 @@ public class UserServiceTest {
     @Test
     public void testFindUserByIdUseMapper() throws Exception {
         // 通过配置资源对象获取 userMapper 对象
-        UserQueryMapper userQueryMapper = (UserQueryMapper) applicationContext.getBean("userQueryMapper");
+        UserMapper userQueryMapper = (UserMapper) applicationContext.getBean("userQueryMapper");
         // 获取 User
         User user = userQueryMapper.findUserById(1);
         // 输出用户信息
         System.out.println("UseMapper:" + user.getId() + "-" + user.getName());
+        Assert.assertEquals(1, user.getId().intValue());
     }
 
     /**
@@ -55,5 +58,6 @@ public class UserServiceTest {
         User user = userDao.findUserById(1);
         // 输出用户信息
         System.out.println("UseDao:" + user.getId() + "-" + user.getName());
+        Assert.assertEquals(1, user.getId().intValue());
     }
 }

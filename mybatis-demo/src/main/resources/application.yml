@@ -1,14 +1,17 @@
 server:
-    servlet:
-        context-path: /web
-        session:
-            timeout: 30m
+  servlet:
+    context-path: /web
+    session:
+      timeout: 30m
 
 spring:
   datasource:
-    username: rockgarden
-    password: freestar77
-    url: jdbc:mysql://localhost:3306/springboot?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: springuser
+    password: ThePassword
+    url: jdbc:mysql://localhost:3306/db_example?useUnicode=true&characterEncoding=utf8&allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-     
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
