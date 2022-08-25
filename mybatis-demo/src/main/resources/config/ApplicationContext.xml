@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 头部的信息就是声明 xml 文档配置标签的规则的限制与规范。 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context" xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
@@ -27,7 +27,7 @@
         <!-- 数据源 -->
         <property name="dataSource" ref="dataSource" />
         <!-- 指明mapper配置文件 -->
-        <!-- <property name="mapperLocations" value="classpath:com/eliteams/quick4j/web/dao/*.xml" /> -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml" />
     </bean>
 
     <!-- 原始 DAO 接口 -->
@@ -37,7 +37,7 @@
     </bean>
 
     <!-- Mapper 扫描器 -->
-    <!-- 从 mapper 包中扫描出 Mapper 接口，自动创建代理对象并且在 Spring 容器中注入。自动扫描出来的 Mapper 的 bean 的 id 为 mapper 类名（首字母小写），所以这里获取的就是名为 “userQueryMapper” 的 mapper 代理对象。 -->
+    <!-- 从 mapper 包中扫描出 Mapper 接口，自动创建代理对象并且在 Spring 容器中注入。自动扫描出来的 Mapper 的 bean 的 id 为 mapper 类名（首字母小写），所以这里获取的就是名为 “userMapper” 的 mapper 代理对象。 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <!-- 扫描 com.example.mybatisdemo.mapper 包下的组件 -->
         <property name="basePackage" value="com.example.mybatisdemo.mapper" />

@@ -9,7 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-// @Entity
+@Entity
 @Data // Generate setters&getters
 @NoArgsConstructor
 // 实现 Serializable 接口是为之后使用 Mapper 动态代理做准备
@@ -17,8 +17,8 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 7542033210412936278L;
 
-    // @Id
-	// @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
     private String name;

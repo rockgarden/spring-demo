@@ -30,16 +30,17 @@ public class UserServiceTest {
      * 使用 Mapper 动态代理和注解获取数据
      * 
      * 从 mapper 包中扫描出 Mapper 接口，自动创建代理对象并且在 Spring 容器中注入。自动扫描出来的 Mapper 的 bean 的 id
-     * 为 mapper 类名（首字母小写），所以这里获取的就是名为 “userQueryMapper” 的 mapper 代理对象。
+     * 为 mapper 类名（首字母小写），所以这里获取的就是名为 “userMapper” 的 mapper 代理对象。
      * 
      * @throws Exception
      */
     @Test
     public void testFindUserByIdUseMapper() throws Exception {
         // 通过配置资源对象获取 userMapper 对象
-        UserMapper userQueryMapper = (UserMapper) applicationContext.getBean("userQueryMapper");
+        UserMapper userMapper = (UserMapper) applicationContext.getBean("userMapper");
+        userMapper.insert("AAA", 20, "AAA@test.com");
         // 获取 User
-        User user = userQueryMapper.findUserById(1);
+        User user = userMapper.findUserById(1);
         // 输出用户信息
         System.out.println("UseMapper:" + user.getId() + "-" + user.getName());
         Assert.assertEquals(1, user.getId().intValue());

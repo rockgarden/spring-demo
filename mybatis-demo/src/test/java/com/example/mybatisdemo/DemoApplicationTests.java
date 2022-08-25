@@ -11,18 +11,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.mybatisdemo.mapper.UserMapper;
 import com.example.mybatisdemo.pojo.User;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 class DemoApplicationTests {
 
-    // @Test
-    // void contextLoads() {
-    // }
+    @Test
+    void contextLoads() {
+        log.trace("load blank application context");
+    }
 
     @Autowired
     private UserMapper userMapper;
@@ -59,7 +64,10 @@ class DemoApplicationTests {
     @Test
     @Rollback
     public void testUserMapper() throws Exception {
+        userMapper.insert("AAA", 20, "AAA@test.com");
         List<User> userList = userMapper.findAll();
+        System.out.println(userList);
+        Assert.assertEquals(1, userList.size());
         for (User user : userList) {
             Assert.assertEquals(null, user.getId());
             Assert.assertNotEquals(null, user.getName());

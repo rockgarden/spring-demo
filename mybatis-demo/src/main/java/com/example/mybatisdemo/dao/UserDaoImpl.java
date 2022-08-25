@@ -20,6 +20,7 @@ public class UserDaoImpl extends SqlSessionDaoSupport implements UserDao {
     public User findUserById(int id) throws Exception {
         // 继承 SqlSessionDaoSupport 类，通过 this.getSqlSession() 得到 sqlSession
         SqlSession sqlSession = this.getSqlSession();
-        return sqlSession.selectOne("mybatisdemo.findUserById", id);
+        // statement 与要使用的语句匹配的唯一标识符 UserMapper.xml 的 mapper namespace + id。
+        return sqlSession.selectOne("com.example.mybatisdemo.mapper.UserMapper.findUserById", id);
     }
 }
