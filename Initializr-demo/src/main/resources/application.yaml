@@ -1,0 +1,77 @@
+# spring:
+#   profiles:
+#     active: "dev"
+# greeting: Holle, World 
+# ---
+
+# spring:
+#   config:
+#     activate:
+#       on-profile: "dev"
+
+# name: ${greeting} from dev.example.com
+
+# ---
+
+# spring:
+#   config:
+#     activate:
+#       on-profile: "test"
+
+# name: ${greeting} from test.example.com
+
+# ---
+
+# spring:
+#   config:
+#     activate:
+#       on-profile: "prod"
+
+# name: ${greeting} from prod.example.com
+
+
+# Demo fo group
+spring:
+  profiles:
+    active: "dev"
+    group:
+      "dev": "dev-db,dev-mq"
+      "prod": "prod-db,prod-mq"
+
+example:
+  greeting: Holle, World 
+  name: ${example.greeting} from ${site}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "dev-db"
+
+db: dev-db.example.com
+site: dev-db.example.com
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "dev-mq"
+
+mq: dev-mq.example.com
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod-db"
+
+db: prod-db.example.com
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "prod-mq"
+
+mq: prod-mq.example.com
+site: prod-mq.example.com
