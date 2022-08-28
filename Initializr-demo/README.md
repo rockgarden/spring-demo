@@ -275,7 +275,7 @@ mq: dev-mq.didispace.com
 - 第一个spring.profiles.active: dev，代表默认激活dev配置
 - 第二段dev配置中使用了spring.profiles.include来引入其他配置信息，这里模拟一下一个是dev的db配置，一个是dev的mq配置。在2.3和之前版本的时候，我们通常就是这样来分组配置不同中间件的。
 
-#### 版本
+#### 2.4版本 activate.on-profile
 
 在升级spring boot到2.4之后，再启动之前的应用，你会发现配置就没有生效了，这里不仅是因为spring.profiles失效的原因，即使我们将其都修改为spring.config.activate.on-profile，也依然无法激活dev-db和dev-mq的配置。因为在2.4版本之后，我们需要使用spring.profiles.group来配置了，同时组织结构也发生了变化。
 
@@ -536,6 +536,13 @@ public class Application {
 - 在pom.xml中添加自动生成配置元数据的依赖 spring-boot-configuration-processor
 - mvn install/gradle: build
 - 在工程target目录下找到元数据文件 spring-configuration-metadata.json
+
+**TODO** @ConfigurationProperties对于多层嵌套参数
+
+- <https://blog.csdn.net/rain_web/article/details/105443423>
+- <https://www.jianshu.com/p/2b4475ac70f5>
+- <https://blog.csdn.net/mamamalululu00000000/article/details/120268071>
+- <https://zhuanlan.zhihu.com/p/139145432>
 
 ## 加密敏感信息
 

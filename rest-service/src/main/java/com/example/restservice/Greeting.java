@@ -1,5 +1,8 @@
-package com.rockgarden.restservice;
+package com.example.restservice;
 
+import lombok.Data;
+
+@Data
 public class Greeting {
 
 	private final long id;
@@ -10,11 +13,4 @@ public class Greeting {
 		this.content = content;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public String getContent() {
-		return content;
-	}
 }
