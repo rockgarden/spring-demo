@@ -182,6 +182,34 @@ Could not find employee 99
 Could not find employee 3
 这一切都很好，但是我们有 RESTful 服务了吗？ （答案是否定的。）
 
+## 变得 RESTful？
+
+到目前为止，您拥有一个基于 Web 的服务来处理涉及员工数据的核心操作。但这还不足以让事情变得“RESTful”。
+
+- /employees/3 之类的漂亮 URL 不是 REST。
+- 仅仅使用 GET、POST 等不是 REST。
+- 安排好所有的 CRUD 操作不是 REST。
+
+事实上，到目前为止，我们构建的更好地描述为 RPC（远程过程调用）。那是因为没有办法知道如何与这个服务交互。如果您今天发布此内容，您还必须编写文档或在某个地方托管开发人员的门户，其中包含所有详细信息。
+
+Roy Fielding 的这个陈述可能会进一步为 REST 和 RPC 之间的区别提供线索：
+
+> I am getting frustrated by the number of people calling any HTTP-based interface a REST API. Today’s example is the SocialSite REST API. That is RPC. It screams RPC. There is so much coupling on display that it should be given an X rating.
+What needs to be done to make the REST architectural style clear on the notion that hypertext is a constraint? In other words, if the engine of application state (and hence the API) is not being driven by hypertext, then it cannot be RESTful and cannot be a REST API. Period. Is there some broken manual somewhere that needs to be fixed?
+— Roy Fielding <https://roy.gbiv.com/untangled/2008/rest-apis-must-be-hypertext-driven>
+
+在我们的表示中不包括超媒体的副作用是客户端必须硬编码 URI 来导航 API。这导致了与网络电子商务兴起之前相同的脆弱性。这表明我们的 JSON 输出需要一点帮助。
+
+介绍 [Spring HATEOAS](https://spring.io/projects/spring-hateoas)，这是一个 Spring 项目，旨在帮助您编写超媒体驱动的输出。要将您的服务升级为 RESTful，请将其添加到您的构建中：
+
+将 Spring HATEOAS (spring-boot-starter-hateoas) 添加到 pom.xml 的依赖项部分。
+
+这个小型库将为我们提供定义 RESTful 服务的结构，然后以可接受的格式呈现它以供客户使用。
+
+任何 RESTful 服务的一个关键要素是添加指向相关操作的链接。 要使您的控制器更加 RESTful，请添加如下链接：
+
+获取单个项目资源
+
 ## 问题
 
 [WARN] `Persistent entities should not be used as arguments of "@RequestMapping" methods (java:S4684)`
@@ -192,4 +220,3 @@ Could not find employee 3
 因此，应避免使用 @Entity 或 @Document 对象作为带有 @RequestMapping 注释的方法的参数。
 除了@RequestMapping，这条规则还考虑了Spring Framework 4.3中引入的注解：@GetMapping、@PostMapping、@PutMapping、@DeleteMapping、@PatchMapping。
 **解决**：用一个简单的 POJO 或 DTO 对象替换这个持久化实体，而不是`do the mapping between "sendINObject" and "persistentObject"`。
-
