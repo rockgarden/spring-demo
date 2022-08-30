@@ -206,7 +206,7 @@ What needs to be done to make the REST architectural style clear on the notion t
 
 这个小型库将为我们提供定义 RESTful 服务的结构，然后以可接受的格式呈现它以供客户使用。
 
-任何 RESTful 服务的一个关键要素是添加指向相关操作的[链接](https://tools.ietf.org/html/rfc8288)。 
+任何 RESTful 服务的一个关键要素是添加指向相关操作的[链接](https://tools.ietf.org/html/rfc8288)。
 要使您的控制器更加 RESTful，将改进如下代码：
 
 ```java
@@ -577,7 +577,7 @@ ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) {
 }
 ```
 
-这不仅在 HAL 中呈现结果对象（名称和名字/姓氏），而且 Location 标头中也填充了 http://localhost:8080/employees/3。 超媒体驱动的客户端可以选择“冲浪”到这个新资源并继续与之交互。
+这不仅在 HAL 中呈现结果对象（名称和名字/姓氏），而且 Location 标头中也填充了 <http://localhost:8080/employees/3>。 超媒体驱动的客户端可以选择“冲浪”到这个新资源并继续与之交互。
 
 PUT 控制器方法需要类似的调整：
 
@@ -667,6 +667,126 @@ ResponseEntity<?> deleteEmployee(@PathVariable Long id) {
 顺便说一句，您是否担心通过网络发送太多信息？ 在某些每个字节都很重要的系统中，API 的发展可能需要退居二线。 但在测量之前不要追求这种过早的优化。
 
 ## 在 REST API 中构建链接
+
+到目前为止，您已经构建了一个带有基本链接的可进化 API。 为了发展您的 API 并更好地为您的客户服务，您需要接受超媒体作为应用程序状态引擎的概念。
+
+业务逻辑不可避免地会建立涉及流程的规则。 此类系统的风险在于我们经常将此类服务器端逻辑带入客户端并建立强耦合。 REST 就是要打破这种连接并最小化这种耦合。
+
+为了展示如何在不触发客户端中断更改的情况下应对状态变化，想象一下添加一个履行订单的系统。
+
+第一步，定义一个订单记录：Order.java
+
+- 该类需要 JPA `@Table` 注释将表的名称更改为 `CUSTOMER_ORDER`，因为 ORDER 不是表的有效名称。
+- 它包括一个description  字段和一个 status 字段。
+
+从客户提交订单到完成或取消订单时，订单必须经历一系列状态转换。 这可以捕获为 Java 枚举：Status.java
+
+这个 enum 捕获了一个订单可以占据的各种状态。
+
+要支持与数据库中的订单交互，必须定义相应的 Spring Data 存储库：
+
+Spring Data JPA 的 JpaRepository 基础接口: OrderRepository.java
+
+有了这个，您现在可以定义一个基本的 OrderController：OrderController.java
+
+- 它包含与您迄今为止构建的控制器相同的 REST 控制器设置。
+- 它同时注入了一个 OrderRepository 和一个（尚未构建的）OrderModelAssembler。
+- 前两个 Spring MVC 路由处理聚合根以及单个项目 Order 资源请求。
+- 第三个 Spring MVC 路由通过在 IN_PROGRESS 状态下启动它们来处理创建新订单。
+- 所有控制器方法都返回 Spring HATEOAS 的 RepresentationModel 子类之一，以正确呈现超媒体 hypermedia （或此类类型的包装器）。
+
+在构建 OrderModelAssembler 之前，让我们讨论一下需要做什么。您正在对 Status.IN_PROGRESS、Status.COMPLETED 和 Status.CANCELLED 之间的状态流进行建模。向客户端提供此类数据时，一件很自然的事情是让客户端根据此有效负载决定它可以做什么。
+
+但那是错误的。
+
+当您在此流程中引入新状态时会发生什么？ UI 上各种按钮的放置可能是错误的。
+
+如果您更改了每个州的名称，可能是在编码国际支持并显示每个州的区域设置特定文本时会怎样？这很可能会破坏所有客户。
+
+输入 HATEOAS 或 超媒体作为应用程序状态引擎(Hypermedia as the Engine of Application State)。与其让客户端解析有效负载，不如为它们提供链接以发出有效操作的信号。将基于状态的操作与数据负载分离。换句话说，当 CANCEL 和 COMPLETE 是有效操作时，将它们动态添加到链接列表中。客户端只需要在链接存在时向用户显示相应的按钮。
+
+这使客户端不必知道此类操作何时有效，从而降低了服务器及其客户端在状态转换逻辑上不同步的风险。
+
+已经接受了 Spring HATEOAS RepresentationModelAssembler 组件的概念，将此类逻辑放入 OrderModelAssembler 将是捕获此业务规则的完美位置： OrderModelAssembler.java。
+
+此资源组装器始终包含指向单项资源的自身链接（self link）以及返回聚合根的链接。 但它还包括两个指向 OrderController.cancel(id) 和 OrderController.complete(id) 的条件链接（尚未定义）。 这些链接仅在订单状态为 Status.IN_PROGRESS 时显示。
+
+如果客户可以采用 HAL 和读取链接的能力，而不是简单地读取普通的旧 JSON 数据，他们可以交换对订单系统领域知识的需求。 这自然减少了客户端和服务器之间的耦合。 它打开了调整订单履行流程的大门，而不会在流程中破坏客户。
+
+要完成订单履行，请将以下内容添加到 OrderController 以进行取消操作：
+
+在 OrderController 中创建“取消”操作 `ResponseEntity<?> cancel(@PathVariable Long id)`
+
+它在允许取消之前检查订单状态。 如果它不是一个有效的状态，它会返回一个 RFC-7807 问题，一个支持超媒体的错误容器。 如果转换确实有效，则将 Order 转换为 CANCELLED。
+
+并将其添加到 OrderController 以完成订单：
+
+在 OrderController 中创建“完整”操作 `ResponseEntity<?> complete(@PathVariable Long id)`
+
+这实现了类似的逻辑，以防止订单状态完成，除非处于正确的状态。
+
+让我们更新 LoadDatabase 以预加载一些 Order 以及之前加载的 Employee 。
+
+更新数据库预加载器 LoadDatabase.java。
+
+```java
+  @Bean
+  CommandLineRunner initDatabase(EmployeeRepository employeeRepository, OrderRepository orderRepository) {
+    return args -> {
+      employeeRepository.save(new Employee("Bilbo", "Baggins", "burglar"));
+      employeeRepository.save(new Employee("Frodo", "Baggins", "thief"));
+      employeeRepository.findAll().forEach(employee -> log.info("Preloaded " + employee));
+      orderRepository.save(new Order("MacBook Pro", Status.COMPLETED));
+      orderRepository.save(new Order("iPhone", Status.IN_PROGRESS));
+      orderRepository.findAll().forEach(order -> {
+        log.info("Preloaded " + order);
+      });
+```
+
+现在你可以测试了！
+
+要使用新生成的订单服务，只需执行一些操作：
+
+`curl -v http://localhost:8080/ordes | json_pp`
+
+此 HAL 文档会根据其当前状态立即显示每个订单的不同链接。
+
+第一个订单，即 COMPLETED 只有导航链接。 未显示状态转换链接。
+
+第二个订单，即 IN_PROGRESS 还具有取消链接和完整链接。
+
+尝试取消订单： `curl -v -X DELETE http://localhost:8080/orders/4/cancel | json_pp`
+
+此响应显示一个 HTTP 200 状态代码，表明它是成功的。 响应 HAL 文档显示该订单处于新状态 (CANCELLED)。 改变状态的链接消失了。
+
+如果再次尝试相同的操作……​
+
+……将​会看到 HTTP 405 Method Not Allowed 响应。 DELETE 已成为无效操作。 问题响应对象清楚地表明您不能“取消”已经处于“CANCELLED”状态的订单。
+
+此外，尝试完成相同的订单也会失败：`curl -v -X PUT localhost:8080/orders/4/complete | json_pp`
+
+有了这一切，您的订单履行服务就能够有条件地显示可用的操作。它还可以防止无效操作。
+
+通过利用超媒体和链接协议，客户端可以构建得更坚固，并且不太可能仅仅因为数据的变化而崩溃。 Spring HATEOAS 可以轻松构建您需要为客户提供服务的超媒体。
+
+## 概括
+
+在本DEMO中，使用了各种策略来构建 REST API。事实证明，REST 不仅仅是漂亮的 URI 和返回 JSON 而不是 XML。
+
+相反，以下策略有助于降低您的服务破坏您可能控制或可能无法控制的现有客户的可能性：
+
+- 不要删除旧字段。相反，支持他们。
+- 使用 rel-based 的链接，这样客户端就不必对 URI 进行硬编码。
+- 尽可能长时间地保留旧链接。即使您必须更改 URI，也要保留 rels，以便旧客户端可以使用新功能。
+- 当各种状态驱动操作可用时，使用链接而不是有效负载数据来指示客户端。
+
+为每种资源类型构建 RepresentationModelAssembler 实现并在所有控制器中使用这些组件似乎需要一些努力。但是这种额外的服务器端设置（由于 Spring HATEOAS 变得容易）可以确保您控制的客户端（更重要的是，您不控制的客户端）可以随着您的 API 的发展而轻松升级。
+
+我们关于如何使用 Spring 构建 RESTful 服务的教程到此结束。
+
+本教程的每个部分都在单个 github 存储库中作为单独的子项目进行管理：
+
+要查看使用 Spring HATEOAS 的更多示例，请参阅 https://github.com/spring-projects/spring-hateoas-examples。
 
 ## 问题
 
