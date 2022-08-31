@@ -217,3 +217,11 @@ static class StudentController {
 完成了接口的排序之后，更细粒度的就是请求参数的排序了。默认情况下，Swagger对Model参数内容的展现也是按字母顺序排列的。
 
 可以按照Model中定义的成员变量顺序来展现，那么需要我们通过@ApiModelProperty注解的position参数来实现位置的设置，比如： User.java 。
+
+### 校验逻辑应用
+
+Swagger自身对JSR-303有一定的支持，但是支持的并那么完善，并没有覆盖所有的注解的。
+
+其中：目前，Swagger共支持以下几个注解：@NotNull、@Max、@Min、@Size、@Pattern。在实际开发过程中，需要分情况来处理，对于Swagger支自动生成的可以利用原生支持来产生，如果有部分字段无法产生，则可以在@ApiModelProperty注解的描述中他，添加相应的校验说明，以便于使用方查看。
+
+包的引用关系：spring-boot-starter-web -> spring-boot-starter-validation -> org.hibernate.validator.hibernate-validator
