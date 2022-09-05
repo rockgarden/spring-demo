@@ -15,6 +15,7 @@
  */
 package com.example.authenticatingldap;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.*;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.*;
 
@@ -25,10 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.FormLoginRequestBuilder;
 import org.springframework.test.web.servlet.MockMvc;
 
-/**
- *
- * @author Rob Winch
- */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AuthenticatingLdapApplicationTests {
@@ -38,20 +35,45 @@ public class AuthenticatingLdapApplicationTests {
 	@Test
 	public void loginWithValidUserThenAuthenticated() throws Exception {
 		FormLoginRequestBuilder login = formLogin()
-			.user("ben")
-			.password("benspassword");
-
+				.user("ben")
+				.password("benspassword");
 		mockMvc.perform(login)
-			.andExpect(authenticated().withUsername("ben"));
+				.andExpect(authenticated().withUsername("ben"));
 	}
 
 	@Test
 	public void loginWithInvalidUserThenUnauthenticated() throws Exception {
 		FormLoginRequestBuilder login = formLogin()
-			.user("invalid")
-			.password("invalidpassword");
+				.user("invalid")
+				.password("invalidpassword");
 
 		mockMvc.perform(login)
-			.andExpect(unauthenticated());
+				.andExpect(unauthenticated());
 	}
+
+	@Autowired
+	private UserRepository personRepository;
+
+	@Test
+	public void findAll() {
+		assertNotNull(personRepository);
+		personRepository.findAll().forEach(p -> {
+			System.out.println(p);
+		});
+	}
+
+	@Test
+    public void save() {
+        User u = new User();
+		assertNotNull(u);
+        u.setUid("uid:kan");
+        u.setUserName("wangkan");
+        u.setCommonName("Wang Kan");
+        u.setUserPassword("12345678");
+        personRepository.save(u);
+        personRepository.findAll().forEach(p -> {
+            System.out.println(p);
+        });
+    }
+
 }

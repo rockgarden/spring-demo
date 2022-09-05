@@ -11,21 +11,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().anyRequest().fullyAuthenticated().and().formLogin();
+		http
+				.authorizeRequests()
+				.anyRequest().fullyAuthenticated()
+				.and()
+				.formLogin();
 	}
 
+	/**
+	 * The ldapAuthentication() method configures things so that the user name at
+	 * the login form is plugged into {0} such that it searches
+	 * uid={0},ou=people,dc=springframework,dc=org in the LDAP server. Also, the
+	 * passwordCompare() method configures the encoder and the name of the
+	 * password’s attribute.
+	 */
 	@Override
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		/**
-		 * The ldapAuthentication() method configures things so that the user name at
-		 * the login form is plugged into {0} such that it searches
-		 * uid={0},ou=people,dc=springframework,dc=org in the LDAP server. Also, the
-		 * passwordCompare() method configures the encoder and the name of the
-		 * password’s attribute.
-		 */
-		auth.ldapAuthentication().userDnPatterns("uid={0},ou=people").groupSearchBase("ou=groups").contextSource()
-				.url("ldap://localhost:8389/dc=springframework,dc=org").and().passwordCompare()
-				.passwordEncoder(new BCryptPasswordEncoder()).passwordAttribute("userPassword");
+		auth
+				.ldapAuthentication()
+				.userDnPatterns("uid={0},ou=people")
+				.groupSearchBase("ou=groups")
+				.contextSource()
+				.url("ldap://localhost:8389/dc=springframework,dc=org")
+				.and()
+				.passwordCompare()
+				.passwordEncoder(new BCryptPasswordEncoder())
+				.passwordAttribute("userPassword");
 	}
 
 }
