@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 
 <head>
@@ -9,7 +9,7 @@
 
 <body>
     <!-- Thymeleaf parses and evaluates the th:text expression to render the value of the ${name} parameter that was set in the controller.  -->
-    <p th:text="'Hello, ' + ${name} + '!'" />
+    <h1 th:text="'Hello, ' + ${name} + '! ' + ${host}"></h1>
 </body>
 
 </html>

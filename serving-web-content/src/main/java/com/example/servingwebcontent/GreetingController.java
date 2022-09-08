@@ -26,7 +26,15 @@ public class GreetingController {
 	public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
 			Model model) {
 		model.addAttribute("name", name);
+		model.addAttribute("host", "https://www.baeldung.com");
 		return "greeting";
 	}
+
+	// @GetMapping("/")
+    // public String index(ModelMap map) {
+    //     map.addAttribute("host", "https://www.baeldung.com");
+    //     // return template name src/main/resources/templates/index.html
+    //     return "index";
+    // }
 
 }
