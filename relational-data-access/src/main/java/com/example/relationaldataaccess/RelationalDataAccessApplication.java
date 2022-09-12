@@ -17,7 +17,7 @@ public class RelationalDataAccessApplication implements CommandLineRunner {
 
 	private static final Logger log = LoggerFactory.getLogger(RelationalDataAccessApplication.class);
 
-	public static void main(String args[]) {
+	public static void main(String[] args) {
 		SpringApplication.run(RelationalDataAccessApplication.class, args);
 	}
 

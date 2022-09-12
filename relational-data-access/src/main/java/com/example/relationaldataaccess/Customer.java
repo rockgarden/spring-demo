@@ -1,11 +1,12 @@
 package com.example.relationaldataaccess;
 
 /**
- *  To represent this data at the application level.
+ * To represent this data at the application level.
  */
 public class Customer {
 	private long id;
-	private String firstName, lastName;
+	private String firstName;
+	private String lastName;
 
 	public Customer(long id, String firstName, String lastName) {
 		this.id = id;
