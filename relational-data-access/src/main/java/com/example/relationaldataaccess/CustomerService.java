@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface CustomerService {
 
-    int create(long id, String firstName, String lastName);
+    int create(String firstName, String lastName);
 
     List<Customer> getByName(String firstName, String lastName);
 

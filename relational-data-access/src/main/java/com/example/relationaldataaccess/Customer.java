@@ -6,6 +6,15 @@ package com.example.relationaldataaccess;
 public class Customer {
 	private long id;
 	private String firstName;
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
 	private String lastName;
 
 	public Customer(long id, String firstName, String lastName) {
