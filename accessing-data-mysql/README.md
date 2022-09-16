@@ -12,6 +12,8 @@ Hibernate是一个开放源代码的对象关系映射框架，它对JDBC进行�
 
 Spring Data JPA的出现可以通过编写一个继承自JpaRepository的接口就能完成数据访问。
 
+Spring Data JPA 隶属于 [Spring Data](https://spring.io/projects/spring-data) 这个顶级项目。它除了涵盖对关系型数据库的抽象之外，其实还有很多对其他数据存储中间件的实现，比如我们常用的Redis、MongoDB、Elasticsearch等。
+
 你需要什么:
 
 - MySQL 5.6 或更高版本。 如果您安装了 Docker，则将数据库作为容器运行可能会很有用。
